@@ -37,6 +37,20 @@ enum scan_token_enum {
     TK_MINUS,  /* - */
     TK_EOT,    /* end of text */
     TK_ANY,    /* A wildcard token used for parsing */
+    TK_BINLIT, /* 0b1010, 0b11110000 */
+    TK_HEXLIT, /* 0x0000000A, 0x0000000B  */
+    TK_HEXDIGITLIT, /* a, b, c... f */
+    TK_MULT,   /* * */
+    TK_DIV,    /* / */
+    TK_LSR,    /* >> */
+    TK_ASR,    /* >- */
+    TK_LSL,    /* << */
+    TK_NOT,    /* ~ */
+    TK_AND,    /* & */
+    TK_OR,     /* | */
+    TK_XOR,    /* ^ */
+    TK_LPAREN, /* ( */
+    TK_RPAREN /* ) */
 };
 
 #define SCAN_TOKEN_STRINGS {\
@@ -44,7 +58,21 @@ enum scan_token_enum {
     "TK_PLUS",\
     "TK_MINUS",\
     "TK_EOT",\
-    "TK_ANY"\
+    "TK_ANY",\
+    "TK_BINLIT",\
+    "TK_HEXLIT",\
+    "TK_HEXDIGITLIT",\
+    "TK_MULT",\
+    "TK_DIV",\
+    "TK_LSR",\
+    "TK_ASR",\
+    "TK_LSL",\
+    "TK_NOT",\
+    "TK_AND",\
+    "TK_OR",\
+    "TK_XOR",\
+    "TK_LPAREN",\
+    "TK_RPAREN"\
 };
 
 struct scan_token_st {
@@ -83,7 +111,12 @@ operator   ::= '+' | '-'
 */
 
 enum parse_expr_enum {EX_INTVAL, EX_OPER1, EX_OPER2};
-enum parse_oper_enum {OP_PLUS, OP_MINUS, OP_MULT, OP_DIV};
+enum parse_oper_enum {OP_PLUS, OP_MINUS, OP_MULT, OP_DIV, OP_LSR, OP_ASR, OP_LSL, OP_NOT, OP_AND, OP_OR, OP_XOR};
+
+struct parse_oper_pair_st {
+    enum scan_token_enum tkid;
+    enum parse_oper_enum opid;
+};
 
 struct parse_node_st {
     enum parse_expr_enum type;
