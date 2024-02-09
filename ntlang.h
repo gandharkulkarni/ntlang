@@ -50,7 +50,8 @@ enum scan_token_enum {
     TK_OR,     /* | */
     TK_XOR,    /* ^ */
     TK_LPAREN, /* ( */
-    TK_RPAREN /* ) */
+    TK_RPAREN, /* ) */
+    TK_NONE
 };
 
 #define SCAN_TOKEN_STRINGS {\
@@ -111,7 +112,7 @@ operator   ::= '+' | '-'
 */
 
 enum parse_expr_enum {EX_INTVAL, EX_OPER1, EX_OPER2};
-enum parse_oper_enum {OP_PLUS, OP_MINUS, OP_MULT, OP_DIV, OP_LSR, OP_ASR, OP_LSL, OP_NOT, OP_AND, OP_OR, OP_XOR};
+enum parse_oper_enum {OP_PLUS, OP_MINUS, OP_MULT, OP_DIV, OP_LSR, OP_ASR, OP_LSL, OP_NOT, OP_AND, OP_OR, OP_XOR, OP_NONE};
 
 struct parse_oper_pair_st {
     enum scan_token_enum tkid;
@@ -129,6 +130,9 @@ struct parse_node_st {
                 struct parse_node_st *right;} oper2;
     };
 };
+
+uint32_t convert_to_uint32(char *str, int base);    
+uint32_t char_to_uint32_digit(char ch); 
 
 
 #define PARSE_TABLE_LEN 1024
@@ -154,6 +158,9 @@ void parse_tree_print(struct parse_node_st *np);
 
 struct config_st {
     char input[SCAN_INPUT_LEN];
+    int base;
+    int width;
+    bool unsigned_flag;
 };
 
 /*
@@ -163,4 +170,10 @@ struct config_st {
 uint32_t eval(struct parse_node_st *pt);
 void eval_print(struct config_st *cp, uint32_t value);
 
+void parse_args(struct config_st *cp, int argc, char **argv);
 
+void print_usage();
+
+void ntlang_error();
+
+ 
