@@ -21,13 +21,13 @@ int main(int argc, char **argv) {
 
     scan_table_init(&scan_table);
     scan_table_scan(&scan_table, config.input);
-    // scan_table_print(&scan_table);
-    // printf("\n");
+    scan_table_print(&scan_table);
+    printf("\n");
     
     parse_table_init(&parse_table);
     parse_tree = parse_program(&parse_table, &scan_table);
-    // parse_tree_print(parse_tree);
-    // printf("\n");
+    parse_tree_print(parse_tree);
+    printf("\n");
 
     value = eval(parse_tree);
     eval_print(&config, value);
@@ -64,8 +64,13 @@ void parse_args(struct config_st *cp, int argc, char **argv) {
         print_usage();
         exit(0);
     }
+    
     /* Initializing unsigned flag to false  */
     cp->unsigned_flag = false;
+    /* Initializing base to 10  */
+    cp->base = 10;
+    /* Initializing width to 32  */
+    cp->width = 32;
 
     while (i < argc) {
         if (argv[i][0] == '-' && argv[i][1] == 'e') {
