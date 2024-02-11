@@ -116,15 +116,12 @@ void print_output_in_base (uint32_t result, int base, int width) {
 
 int generate_output(uint32_t result, char* output, int base, int width){
 	int i = 0;
-	int denom;
-	if(base==2){
-		denom = 1;
-	} else {
-		denom = 4;
+	if(base==16){
+		width = width/4;
 	}
-	while(i<(width/denom)){
+	while(i<width){
 		uint32_t temp = result % base;
-		output[i++] = uint32_digit_char(temp);
+		output[i++] = uint32_digit_to_char(temp);
    	 	result = result / base;
 	}
 
@@ -132,26 +129,41 @@ int generate_output(uint32_t result, char* output, int base, int width){
 	
 }
 
+void print_output(uint32_t result, int base, int width, char prefix) {
+    char output[64];
+    uint32_t mask = (width == 32) ? (1 << (width - 1)) - 1 : (1 << width) - 1;
+    
+    result = result & mask;
+
+    int i = generate_output(result, output, base, width);
+    output[i++] = prefix;
+    output[i++] = '0';
+    output[i] = '\0';
+    reverse(output);
+    printf("%s\n", output);
+}
+
 
 void print_output_in_base2 (uint32_t result, int width) {
-	char output[64];
-	uint32_t mask;
-	if(width==32){
-		mask = (1 << (width-1)) -1;
-	} else{
-		mask = (1 << width) -1;
-	}
-	result = result & mask;
+	// char output[64];
+	// uint32_t mask;
+	// if(width==32){
+		// mask = (1 << (width-1)) -1;
+	// } else{
+		// mask = (1 << width) -1;
+	// }
+	// result = result & mask;
 
-	int i = generate_output(result, output, 2, width);
+	// int i = generate_output(result, output, 2, width);
 	// while(i<width){
 		// output[i++] = '0';
 	// }
-	output[i++] = 'b';
-	output[i++] = '0';
-	output[i] = '\0';
-	reverse(output);
-	printf("%s\n", output);
+	// output[i++] = 'b';
+	// output[i++] = '0';
+	// output[i] = '\0';
+	// reverse(output);
+	// printf("%s\n", output);
+	print_output(result, 2, width, 'b');
 }
 
 void print_output_in_base10 (uint32_t result, int width) {
@@ -162,44 +174,48 @@ void print_output_in_base10 (uint32_t result, int width) {
 	} else{
 		mask = (1 << width) -1;
 	}
-	// printf("Result before mask %d\n", result);
 	result = result & mask;
-	// printf("Result %d\n", result);
-	// printf("Mask %d\n", mask);
 	// int i = generate_output(result, output, 10, width);
 	int i = 0;
 	int base = 10;
 	if(result==0){
 		output[i++] = '0';
 	}
+ 	if ((result >> (width - 1)) & 1) {
+ 		result = (~result) + 1;
+ 		printf("%d\n", result);
+ 	} else{
+ 	
 	while(result!=0){
 		uint32_t temp = result % base;
-		output[i++] = uint32_digit_char(temp);
+		output[i++] = uint32_digit_to_char(temp);
    	 	result = result / base;
 	}
 	output[i] = '\0';
 	reverse(output);
 	printf("%s\n", output);
+	}
 }
 
 void print_output_in_base16 (uint32_t result, int width) {
-	char output[64];
-	uint32_t mask;
-	if(width==32){
-		mask = (1 << (width-1)) -1;
-	} else{
-		 mask = (1 << width) -1;
-	}
-	result = result & mask;
-	int i = generate_output(result, output, 16, width);
+	// char output[64];
+	// uint32_t mask;
+	// if(width==32){
+		// mask = (1 << (width-1)) -1;
+	// } else{
+		 // mask = (1 << width) -1;
+	// }
+	// result = result & mask;
+	// int i = generate_output(result, output, 16, width/4);
 	// while(i<width/4){
 		// output[i++] = '0';
 	// }
-	output[i++] = 'x';
-	output[i++] = '0';
-	output[i] = '\0';
-	reverse(output);
-	printf("%s\n", output);
+	// output[i++] = 'x';
+	// output[i++] = '0';
+	// output[i] = '\0';
+	// reverse(output);
+	// printf("%s\n", output);
+	print_output(result, 16, width, 'x');
 }
 
 

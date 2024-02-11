@@ -133,6 +133,7 @@ struct parse_node_st {
 
 uint32_t convert_to_uint32(char *str, int base);    
 uint32_t char_to_uint32_digit(char ch); 
+char uint32_digit_to_char(uint32_t digit);
 
 
 #define PARSE_TABLE_LEN 1024

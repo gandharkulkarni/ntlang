@@ -20,7 +20,7 @@ void parse_error(char *err) {
     exit(-1);
 }
 
-char *parse_oper_strings[] = {"PLUS", "MINUS", "MULT", "DIV"};
+char *parse_oper_strings[] = {"PLUS", "MINUS", "MULT", "DIV", "LSR", "ASR", "LSL", "NOT", "AND", "OR", "XOR"};
 
 struct parse_oper_pair_st parse_oper_map[] = {
     {TK_PLUS, OP_PLUS},
@@ -88,7 +88,7 @@ struct parse_node_st * parse_expression(struct parse_table_st *pt,
        	np2->oper1.oper = OP_MINUS;
        	np2->oper1.operand = parse_operand(pt, st);
        	np1 = np2;
-     } else if (scan_table_accept(st, TK_LPAREN)) {
+     } else if (scan_table_accept(st, TK_LPAREN)) { //TODO : handle not
          np1 = parse_expression(pt, st);
          if (!scan_table_accept(st, TK_RPAREN)) {
              parse_error("Missing right paren");
@@ -207,6 +207,16 @@ uint32_t char_to_uint32_digit(char ch) {
     } else if (ch >= 'A' && ch <= 'F') {
         return ch - 'A' + 10;
     } else {
+       parse_error("Invalid character in conversion");
+    }
+}
+
+char uint32_digit_to_char(uint32_t digit) {
+    if (digit < 10) {
+    	return '0' + digit;
+   	} else if (digit>9 && digit<17) {
+   		return 'A' + digit - 10;
+   	} else {
        parse_error("Invalid character in conversion");
     }
 }
