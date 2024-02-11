@@ -160,6 +160,11 @@ struct parse_node_st * parse_operand(struct parse_table_st *pt,
         np1->type = EX_OPER1;
         np1->oper1.oper = OP_MINUS;
         np1->oper1.operand = parse_operand(pt, st);
+    } else if (scan_table_accept(st, TK_NOT)) {
+            np1 = parse_node_new(pt);
+            np1->type = EX_OPER1;
+            np1->oper1.oper = OP_NOT;
+            np1->oper1.operand = parse_operand(pt, st);
     } else if (scan_table_accept(st, TK_LPAREN)) {
     	np1 = parse_expression(pt, st);
    		if (!scan_table_accept(st, TK_RPAREN)) {

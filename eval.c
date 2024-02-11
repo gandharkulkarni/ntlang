@@ -39,7 +39,7 @@ uint32_t eval(struct parse_node_st *pt) {
         } else if (pt->oper2.oper == OP_LSR) {
             v1 = v1 >> v2;
         } else if (pt->oper2.oper == OP_ASR) {
-            v1 = v1 >> v2;
+            v1 = (uint32_t)(((int32_t) v1) >> v2);
         } else if (pt->oper2.oper == OP_LSL) {
             v1 = v1 << v2;
         } else if (pt->oper2.oper == OP_AND) {
@@ -114,28 +114,34 @@ void print_output_in_base (uint32_t result, int base, int width) {
 	printf("%s\n", output);
 }
 
-int generate_output(uint32_t result, char* output, int base, int width){
+int generate_output(uint32_t value, char* output, int base, int width){
 	int i = 0;
 	if(base==16){
 		width = width/4;
 	}
 	while(i<width){
-		uint32_t temp = result % base;
+		uint32_t temp = value % base;
 		output[i++] = uint32_digit_to_char(temp);
-   	 	result = result / base;
+   	 	value = value / base;
 	}
 
 	return i;
 	
 }
 
-void print_output(uint32_t result, int base, int width, char prefix) {
-    char output[64];
-    uint32_t mask = (width == 32) ? (1 << (width - 1)) - 1 : (1 << width) - 1;
+uint32_t use_mask(uint32_t value, int width){
+	uint32_t mask = (width == 32) ?  0xFFFFFFFF : (1 << width) - 1;
+    value = value & mask;
     
-    result = result & mask;
+    return value;
+}
 
-    int i = generate_output(result, output, base, width);
+void print_output(uint32_t value, int base, int width, char prefix) {
+    char output[64];
+
+    value = use_mask(value, width);
+
+    int i = generate_output(value, output, base, width);
     output[i++] = prefix;
     output[i++] = '0';
     output[i] = '\0';
@@ -144,7 +150,7 @@ void print_output(uint32_t result, int base, int width, char prefix) {
 }
 
 
-void print_output_in_base2 (uint32_t result, int width) {
+void print_output_in_base2 (uint32_t value, int width) {
 	// char output[64];
 	// uint32_t mask;
 	// if(width==32){
@@ -163,41 +169,43 @@ void print_output_in_base2 (uint32_t result, int width) {
 	// output[i] = '\0';
 	// reverse(output);
 	// printf("%s\n", output);
-	print_output(result, 2, width, 'b');
+	print_output(value, 2, width, 'b');
 }
 
-void print_output_in_base10 (uint32_t result, int width) {
+void print_output_in_base10 (uint32_t value, int width) {
 	char output[64];
-	uint32_t mask;
-	if(width==32){
-		mask = (1 << (width-1)) -1;
-	} else{
-		mask = (1 << width) -1;
-	}
-	result = result & mask;
+
+	value = use_mask(value, width);
+
 	// int i = generate_output(result, output, 10, width);
 	int i = 0;
 	int base = 10;
-	if(result==0){
+	if(value==0){
 		output[i++] = '0';
 	}
- 	if ((result >> (width - 1)) & 1) {
- 		result = (~result) + 1;
- 		printf("%d\n", result);
- 	} else{
+	bool is_negative = (value >> (width - 1)) & 1;
+	
+ 	if (is_negative) {
+ 		value = (~value) + 1;
+ 		value = use_mask(value,width);
+ 	} 
  	
-	while(result!=0){
-		uint32_t temp = result % base;
+	while(value!=0){
+		uint32_t temp = value % base;
 		output[i++] = uint32_digit_to_char(temp);
-   	 	result = result / base;
+  	 	value = value / base;
 	}
+	
+	if (is_negative) {
+        output[i++] = '-';
+    }
+	
 	output[i] = '\0';
 	reverse(output);
 	printf("%s\n", output);
-	}
 }
 
-void print_output_in_base16 (uint32_t result, int width) {
+void print_output_in_base16 (uint32_t value, int width) {
 	// char output[64];
 	// uint32_t mask;
 	// if(width==32){
@@ -215,7 +223,7 @@ void print_output_in_base16 (uint32_t result, int width) {
 	// output[i] = '\0';
 	// reverse(output);
 	// printf("%s\n", output);
-	print_output(result, 16, width, 'x');
+	print_output(value, 16, width, 'x');
 }
 
 
