@@ -79,11 +79,11 @@ void parse_args(struct config_st *cp, int argc, char **argv) {
         }
         else if (argv[i][0] == '-' && argv[i][1] == 'b'){
         	char *arg_value = get_arg_value(&i, argc, argv, "-b");
-        	cp->base = (int) convert_to_uint32(arg_value, 10);
+        	cp->base = (int) parse_convert_string_to_uint32(arg_value, 10);
         }
         else if (argv[i][0] == '-' && argv[i][1] == 'w'){
         	char *arg_value = get_arg_value(&i, argc, argv, "-w");
-        	cp->width = (int) convert_to_uint32(arg_value, 10);
+        	cp->width = (int) parse_convert_string_to_uint32(arg_value, 10);
         }
         else if (argv[i][0] == '-' && argv[i][1] == 'u'){
        		cp->unsigned_flag = true;

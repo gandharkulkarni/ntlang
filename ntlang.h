@@ -131,9 +131,8 @@ struct parse_node_st {
     };
 };
 
-uint32_t convert_to_uint32(char *str, int base);    
-uint32_t char_to_uint32_digit(char ch); 
-char uint32_digit_to_char(uint32_t digit);
+uint32_t parse_convert_string_to_uint32(char *str, int base);    
+uint32_t parse_convert_char_to_uint32_digit(char ch); 
 
 
 #define PARSE_TABLE_LEN 1024
@@ -170,6 +169,7 @@ struct config_st {
 
 uint32_t eval(struct parse_node_st *pt);
 void eval_print(struct config_st *cp, uint32_t value);
+char eval_convert_uint32_digit_to_char(uint32_t digit);
 
 void parse_args(struct config_st *cp, int argc, char **argv);
 
