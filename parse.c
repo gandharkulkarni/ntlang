@@ -229,8 +229,13 @@ char uint32_digit_to_char(uint32_t digit) {
 uint32_t convert_to_uint32(char *str, int base) {
 	uint32_t result = 0;
 	char *p = str;
+	uint32_t max_value = 4294967295;
 	while(*p != '\0'){
 		int digit = char_to_uint32_digit(*p);
+		if(result > (max_value - digit) / base) {
+			printf("overflows uint32_t: %s", str);
+			exit(-1);	
+		} 
 		result = result * base + digit;
 	    p++;
 	}
