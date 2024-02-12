@@ -56,62 +56,13 @@ uint32_t eval(struct parse_node_st *pt) {
     return v1;
 }
 
-void reverse(char *str) {
+void eval_reverse_array(char *str) {
     int len = strlen(str);
     for (int i = 0; i < len / 2; ++i) {
         char temp = str[i];
         str[i] = str[len - 1 - i];
         str[len - 1 - i] = temp;
     }
-}
-
-void print_output_in_base (uint32_t result, int base, int width) {
-	int i=0;
-	char output[64];
-	if(base==2){
-		uint32_t mask;
-		if(width==32){
-			mask = (1 << (width-1)) -1;
-		} else{
-			mask = (1 << width) -1;
-		}
-		result = result & mask;
-	}
-	if(base==16){
-			uint32_t mask = (1 << width/4) -1;
-			result = result & mask;
-	}
-
-	while(result!=0){
-		uint32_t temp = result % base;
-		if(temp<10){
-        	output[i++] = '0' + temp;
-        } else{
-        	output[i++] = 'A' + temp - 10;
-        }
-        result = result / base;
-	}
-	
-	int limit = width;
-	if (base==16) {
-		limit = limit / 4;
-	}
-
-	while(i<limit){
-		output[i++] = '0';
-	}
-	if(base==2){
-		output[i++] = 'b';
-		output[i++] = '0';
-	}
-	if(base==16){
-		output[i++] = 'x';
-		output[i++] = '0';
-	}
-	
-	output[i] = '\0';
-	reverse(output);
-	printf("%s\n", output);
 }
 
 int generate_output(uint32_t value, char* output, int base, int width){
@@ -145,50 +96,33 @@ void print_output(uint32_t value, int base, int width, char prefix) {
     output[i++] = prefix;
     output[i++] = '0';
     output[i] = '\0';
-    reverse(output);
+    eval_reverse_array(output);
     printf("%s\n", output);
 }
 
 
-void print_output_in_base2 (uint32_t value, int width) {
-	// char output[64];
-	// uint32_t mask;
-	// if(width==32){
-		// mask = (1 << (width-1)) -1;
-	// } else{
-		// mask = (1 << width) -1;
-	// }
-	// result = result & mask;
 
-	// int i = generate_output(result, output, 2, width);
-	// while(i<width){
-		// output[i++] = '0';
-	// }
-	// output[i++] = 'b';
-	// output[i++] = '0';
-	// output[i] = '\0';
-	// reverse(output);
-	// printf("%s\n", output);
-	print_output(value, 2, width, 'b');
-}
-
-void print_output_in_base10 (uint32_t value, int width) {
+void print_output_in_base10 (uint32_t value, int base, int width, bool unsigned_flag) {
 	char output[64];
 
 	value = use_mask(value, width);
 
-	// int i = generate_output(result, output, 10, width);
 	int i = 0;
-	int base = 10;
+
 	if(value==0){
 		output[i++] = '0';
 	}
-	bool is_negative = (value >> (width - 1)) & 1;
-	
- 	if (is_negative) {
- 		value = (~value) + 1;
- 		value = use_mask(value,width);
- 	} 
+
+	bool is_negative = false;
+
+	if(unsigned_flag==false){
+		is_negative = (value >> (width - 1)) & 1;
+
+		if (is_negative) {
+			value = (~value) + 1;
+			value = use_mask(value,width);
+		} 
+ 	}
  	
 	while(value!=0){
 		uint32_t temp = value % base;
@@ -201,53 +135,22 @@ void print_output_in_base10 (uint32_t value, int width) {
     }
 	
 	output[i] = '\0';
-	reverse(output);
-	printf("%s\n", output);
-}
 
-void print_output_in_base16 (uint32_t value, int width) {
-	// char output[64];
-	// uint32_t mask;
-	// if(width==32){
-		// mask = (1 << (width-1)) -1;
-	// } else{
-		 // mask = (1 << width) -1;
-	// }
-	// result = result & mask;
-	// int i = generate_output(result, output, 16, width/4);
-	// while(i<width/4){
-		// output[i++] = '0';
-	// }
-	// output[i++] = 'x';
-	// output[i++] = '0';
-	// output[i] = '\0';
-	// reverse(output);
-	// printf("%s\n", output);
-	print_output(value, 16, width, 'x');
+	eval_reverse_array(output);
+
+	printf("%s\n", output);
 }
 
 
 void eval_print(struct config_st *cp, uint32_t value) {
-    /*
-     * Handle -b -w -u
-     *
-     * Use your own conversion functions for uint32_t to string.
-     */
-     // printf("Base  %d\n", cp->base);
-     // printf("Width %d \n", cp->width);
-     // printf("Unsigned flag %d\n", cp->unsigned_flag);
-    if(cp->base==10 && cp->unsigned_flag==true){
-    	printf("%d\n", value);
-    } else if(cp->base==10) {
-      	print_output_in_base10(value, cp->width);
+     
+	if(cp->base==10) {
+      	print_output_in_base10(value, cp->base, cp->width, cp->unsigned_flag);
     } else if(cp->base==2) {
-    	print_output_in_base2(value, cp->width);
+    	print_output(value, cp->base,cp-> width, 'b');
     } else if(cp->base==16) {
-       	print_output_in_base16(value, cp->width);
-    } else{
-   		print_output_in_base(value, cp->base, cp->width);
+  		print_output(value, cp->base,cp-> width, 'x');
     }
-    //printf("%d\n", value);
 }
 
 char eval_convert_uint32_digit_to_char(uint32_t digit) {
