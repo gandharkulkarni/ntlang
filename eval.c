@@ -72,7 +72,7 @@ int generate_output(uint32_t value, char* output, int base, int width){
 	}
 	while(i<width){
 		uint32_t temp = value % base;
-		output[i++] = eval_convert_uint32_digit_to_char(temp);
+		output[i++] = convert_uint32_digit_to_char(temp);
    	 	value = value / base;
 	}
 
@@ -126,7 +126,7 @@ void print_output_in_base10 (uint32_t value, int base, int width, bool unsigned_
  	
 	while(value!=0){
 		uint32_t temp = value % base;
-		output[i++] = eval_convert_uint32_digit_to_char(temp);
+		output[i++] = convert_uint32_digit_to_char(temp);
   	 	value = value / base;
 	}
 	
@@ -152,15 +152,4 @@ void eval_print(struct config_st *cp, uint32_t value) {
   		print_output(value, cp->base,cp-> width, 'x');
     }
 }
-
-char eval_convert_uint32_digit_to_char(uint32_t digit) {
-    if (digit < 10) {
-    	return '0' + digit;
-   	} else if (digit>9 && digit<17) {
-   		return 'A' + digit - 10;
-   	} else {
-       eval_error("Invalid character in conversion");
-    }
-}
-
 

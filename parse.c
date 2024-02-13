@@ -128,29 +128,29 @@ struct parse_node_st * parse_operand(struct parse_table_st *pt,
         np1 = parse_node_new(pt);
         np1->type = EX_INTVAL;
         /* For Project01 you need to implement your own version of atoi() */
-        np1->intval.value = parse_convert_string_to_uint32(tp->value, 10);
+        np1->intval.value = convert_string_to_uint32(tp->value, 10);
     } else if (scan_table_accept(st, TK_BINLIT)){
     	tp = scan_table_get(st, -1);
-    	uint32_t value = parse_convert_string_to_uint32(tp->value, 2);  //(int) strtol(tp->value, NULL, 2); //TODO: change logic
+    	uint32_t value = convert_string_to_uint32(tp->value, 2);  //(int) strtol(tp->value, NULL, 2); //TODO: change logic
        	np1 = parse_node_new(pt);
         np1->type = EX_INTVAL;
         np1->intval.value = value;
     } else if (scan_table_accept(st, TK_HEXLIT)){
-        	tp = scan_table_get(st, -1);
-        	uint32_t value = parse_convert_string_to_uint32(tp->value, 16); //(int) strtol(tp->value, NULL, 16); //TODO: Change logic
-           	np1 = parse_node_new(pt);
-            np1->type = EX_INTVAL;
-            np1->intval.value = value;
+    	tp = scan_table_get(st, -1);
+    	uint32_t value = convert_string_to_uint32(tp->value, 16); //(int) strtol(tp->value, NULL, 16); //TODO: Change logic
+       	np1 = parse_node_new(pt);
+        np1->type = EX_INTVAL;
+        np1->intval.value = value;
     } else if (scan_table_accept(st, TK_MINUS)) {
         np1 = parse_node_new(pt);
         np1->type = EX_OPER1;
         np1->oper1.oper = OP_MINUS;
         np1->oper1.operand = parse_operand(pt, st);
     } else if (scan_table_accept(st, TK_NOT)) {
-            np1 = parse_node_new(pt);
-            np1->type = EX_OPER1;
-            np1->oper1.oper = OP_NOT;
-            np1->oper1.operand = parse_operand(pt, st);
+        np1 = parse_node_new(pt);
+        np1->type = EX_OPER1;
+        np1->oper1.oper = OP_NOT;
+        np1->oper1.operand = parse_operand(pt, st);
     } else if (scan_table_accept(st, TK_LPAREN)) {
     	np1 = parse_expression(pt, st);
    		if (!scan_table_accept(st, TK_RPAREN)) {
@@ -190,32 +190,3 @@ void parse_tree_print(struct parse_node_st *np) {
     parse_tree_print_expr(np, 0);    
 }
 
-uint32_t parse_convert_char_to_uint32_digit(char ch) {
-    if (ch >= '0' && ch <= '9') {
-        return ch - '0';
-    } else if (ch >= 'a' && ch <= 'f') {
-        return ch - 'a' + 10;
-    } else if (ch >= 'A' && ch <= 'F') {
-        return ch - 'A' + 10;
-    } else {
-       parse_error("Invalid character in conversion");
-    }
-}
-
-
-uint32_t parse_convert_string_to_uint32(char *str, int base) {
-	uint32_t result = 0;
-	char *p = str;
-	uint32_t max_value = 4294967295;
-	while(*p != '\0'){
-		int digit = parse_convert_char_to_uint32_digit(*p);
-		if(result > (max_value - digit) / base) {
-			printf("overflows uint32_t: %s", str);
-			exit(-1);	
-		} 
-		result = result * base + digit;
-	    p++;
-	}
-
-	return result;
-}
