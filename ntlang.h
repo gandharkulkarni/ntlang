@@ -15,15 +15,19 @@
 
 # Scanner EBNF (microsyntax)
 
-tokens ::= (token)*
-token  ::= intlit | symbol
-symbol ::= '+'
-integer ::= digit (digit)*
-digit  ::= '0' | '1' | ... | '9'
+whitespace  ::=  (' ' | '\t') (' ' | '\t')*
+
+tokenlist  ::= (token)*
+token      ::= intlit | hexlit | binlit | symbol
+symbol     ::= '+' | '-' | '*' | '/' | '>>' | '>-' | '<<' | '~' | '&' | '|' | '^'
+intlit     ::= digit (digit)*
+hexlit     ::= '0x' | hexdigit (hexdigit)*
+binlit     ::= '0b' ['0', '1'] (['0', '1'])*
+hexdigit   ::= 'a' | ... | 'f' | 'A' | ... | 'F' | digit
+digit      ::= '0' | ... | '9'
 
 # Ignore
-
-whitespace ::= (' ' | '\t') (' ' | '\t')*
+whitespace ::= ' ' | '\t' (' ' | '\t')*
 
 */
 
@@ -104,11 +108,18 @@ bool scan_table_accept(struct scan_table_st *st, enum scan_token_enum tk_expecte
 # Parser
 
 program    ::= expression EOT
-expression ::= operand (operator operand)*
-operand    ::= intlit
-             | '-' operand
 
-operator   ::= '+' | '-'
+expression ::= operand (operator operand)*
+
+operand    ::= intlit
+             | hexlit
+             | binlit
+             | '-' operand
+             | '~' operand
+             | '(' expression ')'
+
+operator   ::= '+' | '-' | '*' | '/' | '>>' | '<<' | '&' | '|' | '^' | '>-' | '~'
+
 */
 
 enum parse_expr_enum {EX_INTVAL, EX_OPER1, EX_OPER2};
