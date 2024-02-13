@@ -122,7 +122,7 @@ void eval_print_output_in_base10 (uint32_t value, int base, int width, bool unsi
 
 	int i = 0;
 
-	/* Base case if value is zero while loop will not execute. */
+	/* Base case if value is zero, while loop will not execute. */
 	if(value==0){
 		output[i++] = '0';
 	}
@@ -134,7 +134,7 @@ void eval_print_output_in_base10 (uint32_t value, int base, int width, bool unsi
 
 		if (is_negative) {
 			value = (~value) + 1;
-			/* Removing unnecessary MSB set due to 2's complement  */
+			/* Removing unnecessary MSB that was set due to 2's complement operation  */
 			value = eval_use_mask(value,width);
 		} 
  	}
