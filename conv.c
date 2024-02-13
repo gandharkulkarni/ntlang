@@ -22,7 +22,7 @@ uint32_t convert_string_to_uint32(char *str, int base) {
 	uint32_t result = 0;
 	char *p = str;
 	uint32_t max_value = UINT32_MAX;
-	while(*p != '\0'){
+	while(*p != '\0') {
 		int digit = convert_char_to_uint32_digit(*p);
 		if(result > (max_value - digit) / base) {
 			printf("overflows uint32_t: %s", str);

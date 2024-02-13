@@ -36,7 +36,7 @@ bool scan_is_whitespace(char ch) {
     return (ch == ' ') || (ch == '\t');
 }
 
-bool scan_is_hexdigit(char ch){
+bool scan_is_hexdigit(char ch) {
 	return (ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F');
 }
 
@@ -147,23 +147,23 @@ char * scan_token(char *p, char *end, struct scan_token_st *tp) {
        	p = scan_token_helper(tp, p, 1, TK_MULT);
     } else if (*p == '/') {
         p = scan_token_helper(tp, p, 1, TK_DIV);
-    } else if ((*p == '>' && *(p+1) == '>')){
+    } else if ((*p == '>' && *(p+1) == '>')) {
     	p = scan_token_helper(tp, p, 2, TK_LSR);
-    } else if ((*p == '<' && *(p+1) == '<')){
+    } else if ((*p == '<' && *(p+1) == '<')) {
       	p = scan_token_helper(tp, p, 2, TK_LSL);
-    } else if ((*p == '>' && *(p+1) == '-')){
+    } else if ((*p == '>' && *(p+1) == '-')) {
     	p = scan_token_helper(tp, p, 2, TK_ASR);
-    } else if ((*p == '~')){
+    } else if ((*p == '~')) {
     	p = scan_token_helper(tp, p, 1, TK_NOT);
-    } else if ((*p == '&')){
+    } else if ((*p == '&')) {
     	p = scan_token_helper(tp, p, 1, TK_AND);
-    } else if ((*p == '|')){
+    } else if ((*p == '|')) {
     	p = scan_token_helper(tp, p, 1, TK_OR);
-    } else if ((*p == '^')){
+    } else if ((*p == '^')) {
     	p = scan_token_helper(tp, p, 1, TK_XOR);	
-    } else if ((*p == '(')){
+    } else if ((*p == '(')) {
     	p = scan_token_helper(tp, p, 1, TK_LPAREN);
-    } else if ((*p == ')')){
+    } else if ((*p == ')')) {
     	p = scan_token_helper(tp, p, 1, TK_RPAREN);
     } else {
         /* Instead of returning an error code, we will usually
@@ -194,7 +194,7 @@ void scan_table_scan(struct scan_table_st *st, char *input) {
         /* Are we done? */
         if (tp->id == TK_EOT) {
             break;
-       }
+       	}
     } while(true);
 }
 

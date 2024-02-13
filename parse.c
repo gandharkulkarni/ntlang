@@ -88,27 +88,27 @@ struct parse_node_st * parse_expression(struct parse_table_st *pt,
        	np2->oper1.oper = OP_MINUS;
        	np2->oper1.operand = parse_operand(pt, st);
        	np1 = np2;
-     } else if(scan_table_accept (st, TK_NOT)) {
+    } else if(scan_table_accept (st, TK_NOT)) {
    		np2 = parse_node_new(pt);
        	np2->type = EX_OPER1;
        	np2->oper1.oper = OP_NOT;
        	np2->oper1.operand = parse_operand(pt, st);
        	np1 = np2;
-     } else if (scan_table_accept(st, TK_LPAREN)) { //TODO : handle not
+    } else if (scan_table_accept(st, TK_LPAREN)) {
         np1 = parse_expression(pt, st);
         if (!scan_table_accept(st, TK_RPAREN)) {
             parse_error("Missing right paren");
         }
-     } else{
+    } else{
      	/* An expression must start with an operand. */
      	np1 = parse_operand(pt, st);
-     }
+    }
 
     while (true) {
         tp = scan_table_get(st, 0);
         /* Check for valid operator */
         enum parse_oper_enum opid = parse_oper_lookup(tp->id);
-		if(opid != OP_NONE){
+		if(opid != OP_NONE) {
 			scan_table_accept(st, TK_ANY);
             np2 = parse_node_new(pt);
             np2->type = EX_OPER2;
@@ -133,17 +133,16 @@ struct parse_node_st * parse_operand(struct parse_table_st *pt,
         tp = scan_table_get(st, -1);
         np1 = parse_node_new(pt);
         np1->type = EX_INTVAL;
-        /* For Project01 you need to implement your own version of atoi() */
         np1->intval.value = convert_string_to_uint32(tp->value, 10);
-    } else if (scan_table_accept(st, TK_BINLIT)){
+    } else if (scan_table_accept(st, TK_BINLIT)) {
     	tp = scan_table_get(st, -1);
-    	uint32_t value = convert_string_to_uint32(tp->value, 2);  //(int) strtol(tp->value, NULL, 2); //TODO: change logic
+    	uint32_t value = convert_string_to_uint32(tp->value, 2);
        	np1 = parse_node_new(pt);
         np1->type = EX_INTVAL;
         np1->intval.value = value;
-    } else if (scan_table_accept(st, TK_HEXLIT)){
+    } else if (scan_table_accept(st, TK_HEXLIT)) {
     	tp = scan_table_get(st, -1);
-    	uint32_t value = convert_string_to_uint32(tp->value, 16); //(int) strtol(tp->value, NULL, 16); //TODO: Change logic
+    	uint32_t value = convert_string_to_uint32(tp->value, 16);
        	np1 = parse_node_new(pt);
         np1->type = EX_INTVAL;
         np1->intval.value = value;
