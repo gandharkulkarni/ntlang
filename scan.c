@@ -93,7 +93,7 @@ char* scan_hexlit(char *p, char *end, struct scan_token_st *tp) {
         i += 1;
 	 }
 	 if (i == 0) { 
-     	 /* No binary digits were read */
+     	 /* No hex digits were read */
  	 	printf("scan error: Expecting at least one hex digit after '0x' ");
          exit(-1);
      }

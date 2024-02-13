@@ -56,6 +56,9 @@ uint32_t eval(struct parse_node_st *pt) {
     return v1;
 }
 
+/**
+Reverse array elements
+*/
 void eval_reverse_array(char *str) {
     int len = strlen(str);
     for (int i = 0; i < len / 2; ++i) {
@@ -65,7 +68,10 @@ void eval_reverse_array(char *str) {
     }
 }
 
-int generate_output(uint32_t value, char* output, int base, int width){
+/**
+generates output string and populates output array based on width
+*/
+int eval_generate_output(uint32_t value, char* output, int base, int width) {
 	int i = 0;
 	if(base==16){
 		width = width/4;
@@ -79,20 +85,25 @@ int generate_output(uint32_t value, char* output, int base, int width){
 	return i;
 	
 }
-
-uint32_t use_mask(uint32_t value, int width){
+/**
+Generates and applies mask to given value
+*/
+uint32_t eval_use_mask(uint32_t value, int width) {
 	uint32_t mask = (width == 32) ?  0xFFFFFFFF : (1 << width) - 1;
     value = value & mask;
     
     return value;
 }
 
-void print_output(uint32_t value, int base, int width, char prefix) {
+/**
+Adds prefix and prints generated output 
+*/
+void eval_print_output(uint32_t value, int base, int width, char prefix) {
     char output[64];
 
-    value = use_mask(value, width);
+    value = eval_use_mask(value, width);
 
-    int i = generate_output(value, output, base, width);
+    int i = eval_generate_output(value, output, base, width);
     output[i++] = prefix;
     output[i++] = '0';
     output[i] = '\0';
@@ -101,14 +112,17 @@ void print_output(uint32_t value, int base, int width, char prefix) {
 }
 
 
-
-void print_output_in_base10 (uint32_t value, int base, int width, bool unsigned_flag) {
+/**
+Generates and prints output in base 10 format
+*/
+void eval_print_output_in_base10 (uint32_t value, int base, int width, bool unsigned_flag) {
 	char output[64];
 
-	value = use_mask(value, width);
+	value = eval_use_mask(value, width);
 
 	int i = 0;
 
+	/* Base case if value is zero while loop will not execute. */
 	if(value==0){
 		output[i++] = '0';
 	}
@@ -120,7 +134,8 @@ void print_output_in_base10 (uint32_t value, int base, int width, bool unsigned_
 
 		if (is_negative) {
 			value = (~value) + 1;
-			value = use_mask(value,width);
+			/* Removing unnecessary MSB set due to 2's complement  */
+			value = eval_use_mask(value,width);
 		} 
  	}
  	
@@ -141,15 +156,17 @@ void print_output_in_base10 (uint32_t value, int base, int width, bool unsigned_
 	printf("%s\n", output);
 }
 
-
+/**
+Prints output of evaluated expression based on config parameters 
+*/
 void eval_print(struct config_st *cp, uint32_t value) {
      
 	if(cp->base==10) {
-      	print_output_in_base10(value, cp->base, cp->width, cp->unsigned_flag);
+      	eval_print_output_in_base10(value, cp->base, cp->width, cp->unsigned_flag);
     } else if(cp->base==2) {
-    	print_output(value, cp->base,cp-> width, 'b');
+    	eval_print_output(value, cp->base,cp-> width, 'b');
     } else if(cp->base==16) {
-  		print_output(value, cp->base,cp-> width, 'x');
+  		eval_print_output(value, cp->base,cp-> width, 'x');
     }
 }
 

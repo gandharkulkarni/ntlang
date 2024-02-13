@@ -165,12 +165,18 @@ struct config_st {
 
 uint32_t eval(struct parse_node_st *pt);
 void eval_print(struct config_st *cp, uint32_t value);
+void eval_print_output_in_base10 (uint32_t value, int base, int width, bool unsigned_flag);
+void eval_print_output(uint32_t value, int base, int width, char prefix);
+uint32_t eval_use_mask(uint32_t value, int width);
+int eval_generate_output(uint32_t value, char* output, int base, int width);
+void eval_reverse_array(char *str);
 
 
+/*
+ * Project01.c
+ */ 
 void parse_args(struct config_st *cp, int argc, char **argv);
-
 void print_usage();
-
 void ntlang_error();
 
 

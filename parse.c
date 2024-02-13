@@ -88,11 +88,17 @@ struct parse_node_st * parse_expression(struct parse_table_st *pt,
        	np2->oper1.oper = OP_MINUS;
        	np2->oper1.operand = parse_operand(pt, st);
        	np1 = np2;
+     } else if(scan_table_accept (st, TK_NOT)) {
+   		np2 = parse_node_new(pt);
+       	np2->type = EX_OPER1;
+       	np2->oper1.oper = OP_NOT;
+       	np2->oper1.operand = parse_operand(pt, st);
+       	np1 = np2;
      } else if (scan_table_accept(st, TK_LPAREN)) { //TODO : handle not
-         np1 = parse_expression(pt, st);
-         if (!scan_table_accept(st, TK_RPAREN)) {
-             parse_error("Missing right paren");
-         }
+        np1 = parse_expression(pt, st);
+        if (!scan_table_accept(st, TK_RPAREN)) {
+            parse_error("Missing right paren");
+        }
      } else{
      	/* An expression must start with an operand. */
      	np1 = parse_operand(pt, st);
