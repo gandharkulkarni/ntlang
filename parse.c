@@ -66,8 +66,8 @@ struct parse_node_st * parse_program(struct parse_table_st *pt,
     return np1;
 }
 
-enum parse_oper_enum parse_oper_lookup(enum scan_token_enum input_token) { 
-	struct parse_oper_pair_st *current_pair = parse_oper_map;
+enum parse_oper_enum parse_oper_lookup(enum scan_token_enum input_token) {
+    struct parse_oper_pair_st *current_pair = parse_oper_map;
     while (current_pair->tkid != TK_NONE) {
         if (current_pair->tkid == input_token) {
             return current_pair->opid;
@@ -108,8 +108,8 @@ struct parse_node_st * parse_expression(struct parse_table_st *pt,
         tp = scan_table_get(st, 0);
         /* Check for valid operator */
         enum parse_oper_enum opid = parse_oper_lookup(tp->id);
-		if(opid != OP_NONE) {
-			scan_table_accept(st, TK_ANY);
+        if(opid != OP_NONE) {
+            scan_table_accept(st, TK_ANY);
             np2 = parse_node_new(pt);
             np2->type = EX_OPER2;
             np2->oper2.oper = opid;
@@ -158,8 +158,8 @@ struct parse_node_st * parse_operand(struct parse_table_st *pt,
         np1->oper1.operand = parse_operand(pt, st);
     } else if (scan_table_accept(st, TK_LPAREN)) {
     	np1 = parse_expression(pt, st);
-   		if (!scan_table_accept(st, TK_RPAREN)) {
-            parse_error("Missing right paren");
+    	if (!scan_table_accept(st, TK_RPAREN)) {
+    	    parse_error("Missing right paren");
         }
     } else {
         parse_error("Bad operand");

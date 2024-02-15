@@ -77,9 +77,9 @@ int eval_generate_output(uint32_t value, char* output, int base, int width) {
 		width = width/4;
 	}
 	while(i<width) {
-		uint32_t temp = value % base;
-		output[i++] = convert_uint32_digit_to_char(temp);
-   	 	value = value / base;
+	    uint32_t temp = value % base;
+	    output[i++] = convert_uint32_digit_to_char(temp);
+	    value = value / base;
 	}
 
 	return i;
@@ -89,7 +89,7 @@ int eval_generate_output(uint32_t value, char* output, int base, int width) {
 Generates and applies mask to given value
 */
 uint32_t eval_use_mask(uint32_t value, int width) {
-	uint32_t mask = (width == 32) ?  0xFFFFFFFF : (1 << width) - 1;
+    uint32_t mask = (width == 32) ?  0xFFFFFFFF : (1 << width) - 1;
     value = value & mask;
     
     return value;
@@ -133,40 +133,36 @@ void eval_print_output_in_base10 (uint32_t value, int base, int width, bool unsi
 		is_negative = (value >> (width - 1)) & 1;
 
 		if (is_negative) {
-			value = (~value) + 1;
-			/* Removing unnecessary MSB that was set due to 2's complement operation  */
-			value = eval_use_mask(value,width);
+		    value = (~value) + 1;
+		    /* Removing unnecessary MSB that was set due to 2's complement operation  */
+		    value = eval_use_mask(value,width);
 		} 
  	}
  	
 	while(value!=0) {
-		uint32_t temp = value % base;
-		output[i++] = convert_uint32_digit_to_char(temp);
-  	 	value = value / base;
+	    uint32_t temp = value % base;
+	    output[i++] = convert_uint32_digit_to_char(temp);
+	    value = value / base;
 	}
 	
 	if (is_negative) {
         output[i++] = '-';
     }
-	
-	output[i] = '\0';
-
-	eval_reverse_array(output);
-
-	printf("%s\n", output);
+    output[i] = '\0';
+    eval_reverse_array(output);
+    printf("%s\n", output);
 }
 
 /**
 Prints output of evaluated expression based on config parameters 
 */
 void eval_print(struct config_st *cp, uint32_t value) {
-     
-	if(cp->base==10) {
-      	eval_print_output_in_base10(value, cp->base, cp->width, cp->unsigned_flag);
+    if(cp->base==10) {
+        eval_print_output_in_base10(value, cp->base, cp->width, cp->unsigned_flag);
     } else if(cp->base==2) {
-    	eval_print_output(value, cp->base,cp-> width, 'b');
+        eval_print_output(value, cp->base,cp-> width, 'b');
     } else if(cp->base==16) {
-  		eval_print_output(value, cp->base,cp-> width, 'x');
+        eval_print_output(value, cp->base,cp-> width, 'x');
     }
 }
 

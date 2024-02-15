@@ -37,7 +37,7 @@ bool scan_is_whitespace(char ch) {
 }
 
 bool scan_is_hexdigit(char ch) {
-	return (ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F');
+    return (ch >= 'a' && ch <= 'f') || (ch >= 'A' && ch <= 'F');
 }
 
 char *scan_whitespace(char *p, char *end) {
@@ -85,21 +85,21 @@ char* scan_binlit(char *p, char *end, struct scan_token_st *tp) {
 }
 
 char* scan_hexlit(char *p, char *end, struct scan_token_st *tp) {
-	 int i = 0;
-	 p += 2;
-	 while ((scan_is_digit(*p) || scan_is_hexdigit(*p)) && (p<end)) {
-	 	tp->value[i] = *p;
-        p += 1;
-        i += 1;
-	 }
-	 if (i == 0) { 
-     	 /* No hex digits were read */
- 	 	printf("scan error: Expecting at least one hex digit after '0x' ");
-         exit(-1);
-     }
-     tp->value[i] = '\0';
-     tp->id = TK_HEXLIT;
-     return p;
+    int i = 0;
+    p += 2;
+    while ((scan_is_digit(*p) || scan_is_hexdigit(*p)) && (p<end)) {
+        tp->value[i] = *p;
+	    p += 1;
+	    i += 1;
+    }
+    if (i == 0) {
+        /* No hex digits were read */
+        printf("scan error: Expecting at least one hex digit after '0x' ");
+        exit(-1);
+    }
+    tp->value[i] = '\0';
+    tp->id = TK_HEXLIT;
+    return p;
 }
 
 
