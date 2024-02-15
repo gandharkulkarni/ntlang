@@ -72,17 +72,16 @@ void eval_reverse_array(char *str) {
 generates output string and populates output array based on width
 */
 int eval_generate_output(uint32_t value, char* output, int base, int width) {
-	int i = 0;
-	if(base==16) {
-		width = width/4;
-	}
-	while(i<width) {
-	    uint32_t temp = value % base;
-	    output[i++] = convert_uint32_digit_to_char(temp);
-	    value = value / base;
-	}
-
-	return i;
+    int i = 0;
+    if(base==16) {
+        width = width/4;
+    }
+    while(i<width) {
+        uint32_t temp = value % base;
+        output[i++] = convert_uint32_digit_to_char(temp);
+        value = value / base;
+    }
+    return i;
 	
 }
 /**
