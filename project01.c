@@ -34,7 +34,7 @@ void print_usage(){
 }
 
 char* get_arg_value(int *i, int argc, char **argv, char *flag){
-	(*i) += 1;
+    (*i) += 1;
     if (*i < argc) {
         return argv[*i];
     } else {
@@ -64,16 +64,13 @@ void parse_args(struct config_st *cp, int argc, char **argv) {
         if (argv[i][0] == '-' && argv[i][1] == 'e') {
         	char *arg_value = get_arg_value(&i, argc, argv, "-e");
        		strncpy(cp->input, arg_value, SCAN_INPUT_LEN);
-        }
-        else if (argv[i][0] == '-' && argv[i][1] == 'b'){
+        } else if (argv[i][0] == '-' && argv[i][1] == 'b') {
         	char *arg_value = get_arg_value(&i, argc, argv, "-b");
         	cp->base = (int) convert_string_to_uint32(arg_value, 10);
-        }
-        else if (argv[i][0] == '-' && argv[i][1] == 'w'){
+        } else if (argv[i][0] == '-' && argv[i][1] == 'w') {
         	char *arg_value = get_arg_value(&i, argc, argv, "-w");
         	cp->width = (int) convert_string_to_uint32(arg_value, 10);
-        }
-        else if (argv[i][0] == '-' && argv[i][1] == 'u'){
+        } else if (argv[i][0] == '-' && argv[i][1] == 'u') {
        		cp->unsigned_flag = true;
        	}
 

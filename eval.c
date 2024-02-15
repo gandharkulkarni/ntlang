@@ -116,36 +116,31 @@ void eval_print_output(uint32_t value, int base, int width, char prefix) {
 Generates and prints output in base 10 format
 */
 void eval_print_output_in_base10 (uint32_t value, int base, int width, bool unsigned_flag) {
-	char output[64];
+    char output[64];
+    value = eval_use_mask(value, width);
+    int i = 0;
 
-	value = eval_use_mask(value, width);
+    /* Base case if value is zero, while loop will not execute. */
+    if(value==0){
+        output[i++] = '0';
+    }
 
-	int i = 0;
+    bool is_negative = false;
+    if(unsigned_flag==false) {
+        is_negative = (value >> (width - 1)) & 1;
+        if (is_negative) {
+            value = (~value) + 1;
+            /* Removing unnecessary MSB that was set due to 2's complement operation  */
+            value = eval_use_mask(value,width);
+        }
+    }
+    while(value!=0) {
+        uint32_t temp = value % base;
+        output[i++] = convert_uint32_digit_to_char(temp);
+        value = value / base;
+    }
 
-	/* Base case if value is zero, while loop will not execute. */
-	if(value==0){
-		output[i++] = '0';
-	}
-
-	bool is_negative = false;
-
-	if(unsigned_flag==false) {
-		is_negative = (value >> (width - 1)) & 1;
-
-		if (is_negative) {
-		    value = (~value) + 1;
-		    /* Removing unnecessary MSB that was set due to 2's complement operation  */
-		    value = eval_use_mask(value,width);
-		} 
- 	}
- 	
-	while(value!=0) {
-	    uint32_t temp = value % base;
-	    output[i++] = convert_uint32_digit_to_char(temp);
-	    value = value / base;
-	}
-	
-	if (is_negative) {
+    if (is_negative) {
         output[i++] = '-';
     }
     output[i] = '\0';
