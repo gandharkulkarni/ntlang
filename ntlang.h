@@ -184,7 +184,7 @@ void eval_reverse_array(char *str);
 
 
 /*
- * Project01.c
+ * ntlang.c
  */ 
 void parse_args(struct config_st *cp, int argc, char **argv);
 void print_usage();
