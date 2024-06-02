@@ -54,3 +54,13 @@ The scanner reads the command-line expression and creates a token data structure
 
 ## Bitwise Operations and Base Conversions
 The interpreter supports various bitwise operations and base conversions as defined in the EBNF grammar provided.
+
+## Built With
+- C - Programming language used
+- Makefile - Used to build the program
+
+## Authors
+- Gandhar Kulkarni
+
+## Acknowledgments
+- Professor Gregory Benson for guidance and support
